@@ -7,17 +7,22 @@ html, body {
     color: #fff;
 }
 
+#pageWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 #title {
     position: relative;
     text-align: center;
-    font-size: 2.5em;
+    font-size: clamp(1.5rem, 6vw, 3rem); /* min 1.5rem, preferred 6vw, max 3rem */
     color: #fff;
-    padding: 20px 20px;
+    padding: 2vh 2vw;
     z-index: 1;
 
-    /* Keep text readable */
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 1vh;
 }
 
 #title::before {
@@ -25,31 +30,43 @@ html, body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 300px;   /* adjust to make image smaller */
-    height: 300px;  /* adjust to make image smaller */
-    background-image: url('https://www.sdsskateboards.com/cdn/shop/products/dip-black_1024x1024.png?v=1676345769'); /* replace with your image */
+    width: clamp(150px, 40vw, 300px);  /* scales but stays within limits */
+    height: clamp(150px, 40vw, 300px);
+    background-image: url('https://www.sdsskateboards.com/cdn/shop/products/dip-black_1024x1024.png?v=1676345769');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    transform: translate(-48.5%, -50%) rotate(90deg); /* rotate 90 degrees */
-    z-index: -1; /* behind the text */
-    opacity: 0.8; /* optional: slightly transparent */
+    transform: translate(-50%, -50%) rotate(90deg);
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+    #title {
+        font-size: 8vw;
+        padding: 3vh 3vw;
+    }
+
+    #title::before {
+        width: 60vw;
+        height: 60vw;
+    }
 }
 
 
 #map {
-    height: calc(100vh - 80px); /* full height minus title */
-    width: 100%;
-    position: relative;
+    flex: 1 1 auto;
+    min-height: 300px;
     border-top: 2px solid #666;  /* subtle border for style */
     border-bottom: 2px solid #666;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
 }
 
 #addSpotBtn {
-    position: absolute;   /* float on top of map */
-    top: 20%;            /* distance from top */
+    position: fixed;   /* float on top of map */
+    top: 90%;            /* distance from top */
     left: 50%;            /* center horizontally */
     transform: translateX(-50%);
     z-index: 1000;        /* make sure it stays above map tiles */
@@ -126,8 +143,8 @@ html, body {
 }
 
 #filterContainer {
-    position: absolute;
-    top: 17%;
+    position: fixed;
+    top: 150px;
     right: 10px;
     z-index: 1100;
     display: flex;
@@ -223,25 +240,28 @@ html, body {
     z-index: 1100;
   }
 
-  #topLeftOverlay {
+  
+#topLeftOverlay {
     position: absolute;   /* stays in the same place while scrolling */
     top: 10px;         /* distance from top */
     left: 10px;        /* distance from left */
     display: flex;
     align-items: center;
-    gap: 8px;          /* space between image and text */
+    gap: 1vw;          /* space between image and text */
     background-color: rgba(0, 0, 0, 0.6); /* semi-transparent background */
-    padding: 5px 10px;
+    padding: 1vw 1vw;
     border-radius: 8px;
     color: #fff;
     font-weight: bold;
     z-index: 1200;      /* above map controls */
-    font-size: 1.1em;
+    font-size: 1.2vw;
 }
+  
 
 #topLeftOverlay img {
-    width: 50px;       /* adjust to desired size */
-    height: 50px;
+    width: 5vw;       /* adjust to desired size */
+    max-width: 50px;
+    height: auto;
     object-fit: cover;
     display: block;
     border-radius: 5px;

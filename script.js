@@ -233,6 +233,11 @@ async function loadSpots() {
 // Call on page load
 loadSpots();
 
+// Call after page loads
+window.addEventListener('resize', () => {
+  map.invalidateSize();
+});
+
 // Disable filter buttons until markers are loaded
 document.querySelectorAll('.filterOption').forEach(btn => btn.disabled = true);
 
