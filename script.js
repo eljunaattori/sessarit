@@ -233,29 +233,49 @@ async function loadSpots() {
 // Call on page load
 loadSpots();
 
-// ===== FILTER LOGIC =====
-document.querySelectorAll('.filterOption').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const tag = btn.dataset.tag.trim();
+// Disable filter buttons until markers are loaded
+document.querySelectorAll('.filterOption').forEach(btn => btn.disabled = true);
 
-        if (selectedFilterTags.includes(tag)) {
-            selectedFilterTags = selectedFilterTags.filter(t => t !== tag);
-            btn.classList.remove('selected');
-        } else {
-            selectedFilterTags.push(tag);
-            btn.classList.add('selected');
-        }
+async function loadSpots() {
+  try {
+    const { data, error } = await supabase.from("spots").select("id, title, description, image_url, tags, lat, lng, user_id");
+    if (error) { console.error(error); return; }
 
-        // Update marker visibility
-        markers.forEach(obj => {
-            const hasTag = obj.tags.some(t => selectedFilterTags.includes(t));
-            if (selectedFilterTags.length === 0 || hasTag) {
-                if (!map.hasLayer(obj.marker)) map.addLayer(obj.marker); // show
-            } else {
-                if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker); // hide
-            }
-        });
+    data.forEach(spot => {
+      const marker = L.marker([spot.lat, spot.lng]).addTo(map);
+      const tags = spot.tags || [];
+
+      const popupContent = `<b>${spot.title}</b><br>${spot.description || ""}<br>` +
+        (spot.image_url ? `<img src="${spot.image_url}" style="max-width:150px; display:block; margin-top:5px;">` : "") +
+        (tags.length ? `<br><i>Tags: ${tags.join(", ")}</i>` : "");
+
+      marker.bindPopup(popupContent);
+
+      markers.push({ marker, tags });
     });
+
+    // Enable filter buttons after markers loaded
+    document.querySelectorAll('.filterOption').forEach(btn => btn.disabled = false);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// Filter logic
+document.querySelectorAll('.filterOption').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tag = btn.dataset.tag.trim();
+    if (selectedFilterTags.includes(tag)) selectedFilterTags = selectedFilterTags.filter(t => t !== tag);
+    else selectedFilterTags.push(tag);
+
+    btn.classList.toggle('selected');
+
+    markers.forEach(obj => {
+      const visible = selectedFilterTags.length === 0 || obj.tags.some(t => selectedFilterTags.includes(t));
+      if (visible && !map.hasLayer(obj.marker)) map.addLayer(obj.marker);
+      if (!visible && map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
+    });
+  });
 });
 
 // ===== AUTH MODAL =====
