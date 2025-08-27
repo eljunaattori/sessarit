@@ -208,19 +208,23 @@ async function loadSpots() {
   
       data.forEach(spot => {
         const marker = L.marker([spot.lat, spot.lng]).addTo(map);
-  
+      
         let popupContent = `<b>${spot.title}</b><br>${spot.description || ""}<br>`;
-  
-        if (spot.image_url) {
-          popupContent += `<img src="${spot.image_url}" style="max-width:150px; display:block; margin-top:5px;">`;
-        }
-  
-        if (spot.tags && spot.tags.length > 0) {
-          popupContent += `<br><i>Tags: ${spot.tags.join(", ")}</i>`;
-        }
-  
+        if (spot.image_url) popupContent += `<img src="${spot.image_url}" style="max-width:150px; display:block; margin-top:5px;">`;
+        if (spot.tags && spot.tags.length > 0) popupContent += `<br><i>Tags: ${spot.tags.join(", ")}</i>`;
+      
         marker.bindPopup(popupContent);
+      
+        // Store in markers array for filtering
+        markers.push({
+          marker: marker,
+          tags: spot.tags || [],
+          imageUrl: spot.image_url || null,
+          id: spot.id,
+          user_id: spot.user_id
+        });
       });
+      
     } catch (err) {
       console.error("Unexpected error loading spots:", err);
     }
@@ -246,9 +250,9 @@ document.querySelectorAll('.filterOption').forEach(btn => {
         markers.forEach(obj => {
             const hasTag = obj.tags.some(t => selectedFilterTags.includes(t));
             if (selectedFilterTags.length === 0 || hasTag) {
-                obj.marker.addTo(map);
+                if (!map.hasLayer(obj.marker)) map.addLayer(obj.marker); // show
             } else {
-                map.removeLayer(obj.marker);
+                if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker); // hide
             }
         });
     });
