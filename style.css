@@ -1,0 +1,224 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #353535; /* concrete grey */
+    color: #fff;
+}
+
+#title {
+    position: relative;
+    text-align: center;
+    font-size: 2.5em;
+    color: #fff;
+    padding: 20px 20px;
+    z-index: 1;
+
+    /* Keep text readable */
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+#title::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;   /* adjust to make image smaller */
+    height: 300px;  /* adjust to make image smaller */
+    background-image: url('https://www.sdsskateboards.com/cdn/shop/products/dip-black_1024x1024.png?v=1676345769'); /* replace with your image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transform: translate(-48.5%, -50%) rotate(90deg); /* rotate 90 degrees */
+    z-index: -1; /* behind the text */
+    opacity: 0.8; /* optional: slightly transparent */
+}
+
+
+#map {
+    height: calc(100vh - 80px); /* full height minus title */
+    width: 100%;
+    position: relative;
+    border-top: 2px solid #666;  /* subtle border for style */
+    border-bottom: 2px solid #666;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+}
+
+#addSpotBtn {
+    position: absolute;   /* float on top of map */
+    top: 20%;            /* distance from top */
+    left: 50%;            /* center horizontally */
+    transform: translateX(-50%);
+    z-index: 1000;        /* make sure it stays above map tiles */
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#addSpotBtn:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden { display: none; }
+
+#spotForm {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex; /* only applies when visible */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#spotForm form {
+    background-color: #303030dc;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#spotForm input, #spotForm textarea {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+#spotForm button {
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#tagOptions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tagBtn {
+    padding: 5px 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #eee;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.tagBtn.selected {
+    background-color: #666;
+    color: #fff;
+    border-color: #444;
+}
+
+#filterContainer {
+    position: absolute;
+    top: 17%;
+    right: 10px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#filterBtn {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#filterPanel {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    gap: 10px;
+    background-color: #3f3f3f;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    min-width: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#filterPanel h3 {
+    margin-top: 10px;
+    font-size: 1em;
+    color: #fff;
+}
+
+#filterOptions button {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 8px;
+    background-color: #eee;
+    border: 1px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+}
+
+#filterOptions button.selected {
+    background-color: #15ff00;
+    color: #fff;
+    border-color: #444;
+}
+
+/* Modal background */
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+  }
+  
+  /* Hide modal by default */
+  .hidden { display: none; }
+  
+  /* Modal box */
+  .modal-content {
+    background: #3f3f3f;
+    padding: 20px;
+    border-radius: 10px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  /* Close button */
+  .close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
+  /* Open button */
+  .auth-open {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1100;
+  }

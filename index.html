@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sessarit</title>
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1 id="title">Sessarit</h1>
+
+  <button id="addSpotBtn">Lisää Spotti</button>
+
+  <div id="spotForm" style="display: none;">
+    <form id="addSpotForm">
+      <h2>Lisää Spotti</h2>
+      <label for="spotTitle">Nimi:</label>
+      <input type="text" id="spotTitle" required>
+      
+      <label for="spotDesc">Kuvaus:</label>
+      <textarea id="spotDesc" rows="3" required></textarea>
+
+      <label for="spotImageUrl">Kuvan URL (valinnainen):</label>
+      <input type="text" id="spotImageUrl" placeholder="https://example.com/image.jpg">
+
+      <label>Tägit:</label>
+      <div id="tagOptions">
+        <button type="button" class="tagBtn">Boxi</button>
+        <button type="button" class="tagBtn">Ditsi</button>
+        <button type="button" class="tagBtn">Stairs</button>
+        <button type="button" class="tagBtn">Droppi</button>
+        <button type="button" class="tagBtn">Gäppi</button>
+        <button type="button" class="tagBtn">Railii</button>
+        <button type="button" class="tagBtn">Kurbi</button>
+        <button type="button" class="tagBtn">Hillbomb</button>
+        <button type="button" class="tagBtn">Parkki</button>
+        <button type="button" class="tagBtn">P-Halli</button>
+        <button type="button" class="tagBtn">DIY</button>
+        <button type="button" class="tagBtn">Smuuttii Flättii</button>
+        <button type="button" class="tagBtn">Raffii Flättii</button>
+      </div>
+      
+      <button type="submit">Lisää</button>
+      <button type="button" id="cancelSpot">Peruuta</button>
+    </form>
+  </div>
+
+  <div id="filterContainer">
+    <button id="filterBtn">Suodata</button>
+    <div id="filterPanel" class="hidden">
+      <h3>Valitse tägit:</h3>
+      <div id="filterOptions">
+        <button class="filterOption" data-tag="Boxi">Boxi</button>
+        <button class="filterOption" data-tag="Ditsi">Ditsi</button>
+        <button class="filterOption" data-tag="Stairs">Stairs</button>
+        <button class="filterOption" data-tag="Droppi">Droppi</button>
+        <button class="filterOption" data-tag="Gäppi">Gäppi</button>
+        <button class="filterOption" data-tag="Kurbi">Kurbi</button>
+        <button class="filterOption" data-tag="Hillbomb">Hillbomb</button>
+        <button class="filterOption" data-tag="Parkki">Parkki</button>
+        <button class="filterOption" data-tag="P-Halli">P-Halli</button>
+        <button class="filterOption" data-tag="DIY">DIY</button>
+        <button class="filterOption" data-tag="Smuuttii Flättii">Smuuttii Flättii</button>
+        <button class="filterOption" data-tag="Raffii Flättii">Raffii Flättii</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="map" style="height: 90vh;"></div>
+
+  <!-- ===== AUTH MODAL ===== -->
+<div id="authModal" class="modal hidden">
+    <div class="modal-content">
+      <span id="closeAuth" class="close">&times;</span>
+      <h2>Tili</h2>
+      
+      <input type="email" id="email" placeholder="Email"><br>
+      <input type="password" id="password" placeholder="Password"><br><br>
+  
+      <button onclick="signUp()">Sign Up</button>
+      <button onclick="signIn()">Sign In</button>
+      <button onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+  
+  <!-- Button to open modal -->
+  <button id="authBtn" class="auth-open">Account</button>
+  
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    const supabaseUrl = 'https://gexjgrverbwkncorpici.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdleGpncnZlcmJ3a25jb3JwaWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyNTEwMzcsImV4cCI6MjA3MTgyNzAzN30.kzvRZqX4ia1jcdePFfbUozQMywS5pZufX4pMv20GRow';
+    window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+
+  <!-- Script.js JS -->
+  <script src="script.js"></script>
+</body>
+</html>
