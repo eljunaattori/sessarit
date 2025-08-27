@@ -224,7 +224,7 @@ html, body {
   }
 
   #topLeftOverlay {
-    position: fixed;   /* stays in the same place while scrolling */
+    position: absolute;   /* stays in the same place while scrolling */
     top: 10px;         /* distance from top */
     left: 10px;        /* distance from left */
     display: flex;
