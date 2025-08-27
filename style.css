@@ -222,3 +222,25 @@ html, body {
     right: 10px;
     z-index: 1100;
   }
+
+  #topLeftOverlay {
+    position: fixed;   /* stays in the same place while scrolling */
+    top: 10px;         /* distance from top */
+    left: 10px;        /* distance from left */
+    display: flex;
+    align-items: center;
+    gap: 8px;          /* space between image and text */
+    background-color: rgba(0, 0, 0, 0.6); /* semi-transparent background */
+    padding: 5px 10px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    z-index: 1200;      /* above map controls */
+}
+
+#topLeftOverlay img {
+    width: 50px;       /* adjust to desired size */
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
