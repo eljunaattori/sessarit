@@ -83,8 +83,6 @@ html, body {
     background-color: #f0f0f0;
 }
 
-.hidden { display: none; }
-
 #spotForm {
     display: flex;
     position: fixed;
@@ -136,6 +134,10 @@ html, body {
     font-size: 0.9em;
 }
 
+#tagBtn:hover {
+    background-color: #f0f0f0;
+}
+
 .tagBtn.selected {
     background-color: #666;
     color: #fff;
@@ -160,6 +162,10 @@ html, body {
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#filterBtn:hover {
+    background-color: #f0f0f0;
 }
 
 #filterPanel {
@@ -212,9 +218,6 @@ html, body {
     background: rgba(0,0,0,0.5);
   }
   
-  /* Hide modal by default */
-  .hidden { display: none; }
-  
   /* Modal box */
   .modal-content {
     background: #3f3f3f;
@@ -239,7 +242,6 @@ html, body {
     right: 10px;
     z-index: 1100;
   }
-
   
 #topLeftOverlay {
     position: absolute;   /* stays in the same place while scrolling */
@@ -265,4 +267,123 @@ html, body {
     object-fit: cover;
     display: block;
     border-radius: 5px;
+}
+
+#authBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#authBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#signInBtn {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#signInBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#signUpBtn {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#signUpBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#signOutBtn {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#signOutBtn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Overlay on top of everything */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Higher than modals */
+}
+
+/* Hidden state */
+.hidden {
+  display: none;
+}
+
+/* Content box */
+.popup-content {
+  background: #3f3f3f;
+  padding: 20px 25px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.popup-btn {
+  margin-top: 15px;
+  padding: 8px 15px;
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #333;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.popup-btn:hover {
+  background-color: #f0f0f0;
+}
+
+#locateBtn {
+    position: fixed;
+    right: 5px;
+    bottom: 25px;
+    padding: 5px 5px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    z-index: 2000;
+}
+
+#locateBtn:hover {
+    background-color: #f0f0f0;
 }

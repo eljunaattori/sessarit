@@ -20,12 +20,17 @@ const filterPanel = document.getElementById('filterPanel');
 const authModal = document.getElementById('authModal');
 const authBtn = document.getElementById('authBtn');
 const closeAuth = document.getElementById('closeAuth');
+const popup = document.getElementById("popup");
+const popupMessage = document.getElementById("popupMessage");
+const popupOkBtn = document.getElementById("popupOkBtn");
+const locateBtn = document.getElementById("locateBtn");
 
 let addingSpot = false;
 let tempLatLng = null;
 let selectedTags = [];
 let selectedFilterTags = [];
 let markers = [];
+let userMarker = null; // keep track of the marker globally
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSpots();
@@ -36,21 +41,21 @@ async function signUp() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) alert(error.message);
-  else alert("Check your email to confirm!");
+  if (error) showPopup(error.message);
+  else showPopup("Tarkista sähköpostisi!");
 }
 
 async function signIn() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) alert(error.message);
-  else alert("Signed in!");
+  if (error) showPopup(error.message);
+  else showPopup("Kirjauduttu sisään!");
 }
 
 async function signOut() {
   await supabase.auth.signOut();
-  alert("Signed out!");
+  showPopup("Kirjauduttu ulos!");
 }
 
 // ===== FILTER PANEL TOGGLE =====
@@ -125,7 +130,7 @@ async function addMarkerWithImage(imageUrl) {
   // Get current logged-in user
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    alert("You must be logged in to add a spot!");
+    showPopup("Sinun täytyy olla kirjautunut sisään luodaksesi spotin!");
     return;
   }
 
@@ -135,7 +140,7 @@ async function addMarkerWithImage(imageUrl) {
     .select();
 
   if (error) {
-    alert('Error saving spot: ' + error.message);
+    showPopup('Ongelma tallentaessa spottia: ' + error.message);
     return;
   }
 
@@ -257,3 +262,63 @@ window.addEventListener('click', e => {
 
 // ===== WINDOW RESIZE =====
 window.addEventListener('resize', () => map.invalidateSize());
+
+// Function to show popup with a message
+function showPopup(message) {
+  popupMessage.textContent = message;
+  popup.classList.remove("hidden");
+}
+
+// Function to hide popup
+function hidePopup() {
+  popup.classList.add("hidden");
+}
+
+// Button & outside click
+popupOkBtn.addEventListener("click", hidePopup);
+popup.addEventListener("click", (e) => {
+  if (e.target === popup) hidePopup();
+});
+
+// Location button & logic
+locateBtn.addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    showPopup("Selaimesi ei tue GPS-paikannusta.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+
+      // Move map to current location
+      map.setView([latitude, longitude], 16);
+
+      // Add or move a marker for the user
+      if (!userMarker) {
+        userMarker = L.marker([latitude, longitude], { 
+          icon: L.icon({ 
+            iconUrl: 'https://www.iconpacks.net/icons/2/free-location-pin-icon-2965-thumb.png', 
+            iconSize: [40, 40], 
+            iconAnchor: [20, 40], 
+            popupAnchor: [0, -40] 
+          }) 
+        }).addTo(map)
+          .bindPopup("Olet tässä.")
+          .openPopup();
+      } else {
+        userMarker.setLatLng([latitude, longitude]).openPopup();
+      }
+    },
+    (error) => {
+      showPopup("GPS-paikannus epäonnistui: " + error.message);
+    }
+  );
+});
+
+// Locate user on page load
+navigator.geolocation.getCurrentPosition(
+  (pos) => {
+    map.setView([pos.coords.latitude, pos.coords.longitude], 14);
+  }
+);

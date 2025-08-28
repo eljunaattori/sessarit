@@ -85,19 +85,29 @@
 <div id="authModal" class="modal hidden">
     <div class="modal-content">
       <span id="closeAuth" class="close">&times;</span>
-      <h2>Tili</h2>
+      <h2>Kirjaudu sisään</h2>
       
       <input type="email" id="email" placeholder="Email"><br>
       <input type="password" id="password" placeholder="Password"><br><br>
   
-      <button onclick="signUp()">Sign Up</button>
-      <button onclick="signIn()">Sign In</button>
-      <button onclick="signOut()">Sign Out</button>
+      <button id="signUpBtn" onclick="signUp()">Sign Up</button>
+      <button id="signInBtn" onclick="signIn()">Sign In</button>
+      <button id="signOutBtn" onclick="signOut()">Sign Out</button>
     </div>
   </div>
   
   <!-- Button to open modal -->
-  <button id="authBtn" class="auth-open">Account</button>
+  <button id="authBtn" class="auth-open">Tili</button>
+
+    <!-- Global Popup -->
+  <div id="popup" class="popup-overlay hidden">
+    <div class="popup-content">
+      <p id="popupMessage"></p>
+      <button id="popupOkBtn" class="popup-btn">OK</button>
+    </div>
+  </div>
+
+  <button id="locateBtn">📍</button>
   
 </div>
 
