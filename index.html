@@ -82,22 +82,62 @@
   <div id="map" style="height: 90vh;"></div>
 
   <!-- ===== AUTH MODAL ===== -->
-<div id="authModal" class="modal hidden">
+  <div id="authModal" class="modal hidden">
     <div class="modal-content">
       <span id="closeAuth" class="close">&times;</span>
-      <h2>Kirjaudu sisään</h2>
+      <h2>Kirjaudu sisään tai luo tili</h2>
       
       <input type="email" id="email" placeholder="Email"><br>
       <input type="password" id="password" placeholder="Password"><br><br>
-  
-      <button id="signUpBtn" onclick="signUp()">Sign Up</button>
-      <button id="signInBtn" onclick="signIn()">Sign In</button>
-      <button id="signOutBtn" onclick="signOut()">Sign Out</button>
+
+      <button id="authSubmitBtn">Kirjaudu / Luo tili</button>
+      </div>
+    </div>
+
+  <div id="authContainer" style="display: flex; gap: 10px; align-items: center; position: absolute; top: 10px; right: 10px; z-index: 1100;">
+
+  <!-- Shown only when logged out -->
+  <button id="authBtn">Kirjaudu sisään</button>
+
+  <!-- Shown only when logged in -->
+  <div id="userInfo" style="display: none; text-align: center; min-width: 120px;">
+    <div style="display: flex; justify-content: center; gap: 6px; font-weight: bold;">
+      <span id="userDisplayName"></span>
+      <span id="userEmail"></span>
+    </div>
+    <img id="userProfilePic" src="" alt="Profiilikuva" style="width: 40px; height: 40px; border-radius: 50%; margin-top: 4px; display: none;">
+  </div>
+
+  <button id="profileBtn" style="display: none;">Profiili</button>
+  <button id="signOutBtn" style="display: none;" onclick="signOut()">Kirjaudu ulos</button>
+</div>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeProfile" class="close">&times;</span>
+    <h2>Profiili</h2>
+
+    <div id="profileDisplay">
+      <img id="profilePicDisplay" src="" alt="Profiilikuva" style="max-width:80px; border-radius:50%; display:block; margin:0 auto 10px;">
+      <p><strong>Nimike:</strong> <span id="displayNameText"></span></p>
+      <p><strong>Email:</strong> <span id="emailText"></span></p>
+    </div>
+
+    <div id="profileEdit" style="display:none;">
+      <label>Nimike:</label><br>
+      <input type="text" id="displayName" placeholder=""><br>
+      <label>Profiilikuvan URL:</label><br>
+      <input type="text" id="profilePic" placeholder=""><br>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+      <button id="editProfileBtn">Muokkaa</button>
+      <button id="saveProfileBtn" style="display:none;">Tallenna</button>
     </div>
   </div>
-  
-  <!-- Button to open modal -->
-  <button id="authBtn" class="auth-open">Tili</button>
+</div>
+
 
     <!-- Global Popup -->
   <div id="popup" class="popup-overlay hidden">

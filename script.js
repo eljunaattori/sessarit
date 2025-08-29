@@ -24,6 +24,21 @@ const popup = document.getElementById("popup");
 const popupMessage = document.getElementById("popupMessage");
 const popupOkBtn = document.getElementById("popupOkBtn");
 const locateBtn = document.getElementById("locateBtn");
+const profileBtn = document.getElementById('profileBtn');
+const profileModal = document.getElementById('profileModal');
+const closeProfile = document.getElementById('closeProfile');
+const displayNameInput = document.getElementById('displayName');
+const profilePicInput = document.getElementById('profilePic');
+const saveProfileBtn = document.getElementById('saveProfileBtn');
+const signOutBtn = document.getElementById('signOutBtn');
+const userEmailSpan = document.getElementById('userEmail');
+const displayNameText = document.getElementById('displayNameText');
+const emailText = document.getElementById('emailText');
+const profilePicDisplay = document.getElementById('profilePicDisplay');
+const profileEditDiv = document.getElementById('profileEdit');
+const profileDisplayDiv = document.getElementById('profileDisplay');
+const editProfileBtn = document.getElementById('editProfileBtn');
+const pic = document.getElementById("userProfilePic");
 
 let addingSpot = false;
 let tempLatLng = null;
@@ -36,27 +51,155 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSpots();
 });
 
+// Function to update auth button visibility
+async function updateAuthButton() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    authBtn.style.display = 'none';
+    signOutBtn.style.display = 'block';
+    profileBtn.style.display = 'block';
+    userEmailSpan.style.display = 'inline';
+    userEmailSpan.textContent = user.email;
+    userInfo.style.display = "block";
+
+    // Pre-fill profile fields if stored
+    const { data: meta } = await supabase
+    .from('users_meta')
+    .select('display_name, profile_pic')
+    .eq('id', user.id)
+    .single();
+    if (meta) {
+      displayNameInput.value = meta.display_name || '';
+      profilePicInput.value = meta.profile_pic || '';
+    }
+
+document.getElementById("userDisplayName").textContent = meta?.display_name 
+  ? `"${meta.display_name}"`
+  : ""; 
+document.getElementById("userEmail").textContent = user.email || "";
+
+  if (meta?.profile_pic) {
+    pic.src = meta.profile_pic;
+    pic.style.display = "block";
+  } else {
+    pic.style.display = "none";
+  }
+
+  } else {
+    authBtn.style.display = 'block';
+    signOutBtn.style.display = 'none';
+    profileBtn.style.display = 'none';
+    userEmailSpan.style.display = 'none';
+    userEmailSpan.textContent = '';
+    userInfo.style.display = "none";
+  }
+}
+
+// Call on page load
+updateAuthButton();
+
 // ===== LOGIN =====
-async function signUp() {
-  const email = document.getElementById('email').value;
+authSubmitBtn.addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) showPopup(error.message);
-  else showPopup("Tarkista sähköpostisi!");
-}
 
-async function signIn() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) showPopup(error.message);
-  else showPopup("Kirjauduttu sisään!");
-}
+  if (!email || !password) {
+    showPopup("Täytä sekä sähköposti että salasana.");
+    return;
+  }
 
-async function signOut() {
+  try {
+    // Try to sign in first
+    let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (!signInError) {
+      showPopup("Kirjauduttu sisään!");
+      authModal.classList.add('hidden');
+      updateAuthButton(); // Update auth button
+    } else if (signInError.message.includes("User not found")) {
+      // Email not registered → sign up
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+      if (signUpError) {
+        showPopup("Rekisteröinti epäonnistui: " + signUpError.message);
+      } else {
+        showPopup("Tili luotu! Tarkista sähköpostisi vahvistaaksesi tilin.");
+        authModal.classList.add('hidden');
+      }
+    } else {
+      showPopup("Kirjautuminen epäonnistui: " + signInError.message);
+    }
+  } catch (err) {
+    console.error(err);
+    showPopup("Tapahtui virhe: " + err.message);
+  }
+});
+
+signOutBtn.addEventListener('click', async () => {
   await supabase.auth.signOut();
   showPopup("Kirjauduttu ulos!");
-}
+  updateAuthButton();
+});
+
+  async function openProfileModal() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return showPopup("Et ole kirjautunut sisään.");
+
+    const { data: meta } = await supabase.from('users_meta').select('display_name, profile_pic').eq('id', user.id).single();
+
+    displayNameText.textContent = meta?.display_name || "(ei asetettu)";
+    profilePicDisplay.src = meta?.profile_pic || "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
+    emailText.textContent = user.email;
+
+    displayNameInput.value = meta?.display_name || "";
+    profilePicInput.value = meta?.profile_pic || "";
+
+    profileDisplayDiv.style.display = 'block';
+    profileEditDiv.style.display = 'none';
+    editProfileBtn.style.display = 'inline-block';
+    saveProfileBtn.style.display = 'none';
+
+    profileModal.classList.remove('hidden');
+  }
+
+  editProfileBtn.addEventListener('click', () => {
+    profileDisplayDiv.style.display = 'none';
+    profileEditDiv.style.display = 'block';
+    editProfileBtn.style.display = 'none';
+    saveProfileBtn.style.display = 'inline-block';
+  });
+
+  saveProfileBtn.addEventListener('click', async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return showPopup("Et ole kirjautunut sisään.");
+
+    const display_name = displayNameInput.value.trim();
+    const profile_pic = profilePicInput.value.trim();
+
+  // Upsert the user's profile meta
+  const { data, error } = await supabase.from('users_meta').upsert({
+    id: user.id,          // must match auth.uid()
+    display_name,
+    profile_pic
+  });
+
+    if (error) return showPopup("Profiilin tallennus epäonnistui: " + error.message);
+
+    displayNameText.textContent = display_name || "(ei asetettu)";
+    profilePicDisplay.src = profile_pic || "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png";
+
+    profileDisplayDiv.style.display = 'block';
+    profileEditDiv.style.display = 'none';
+    editProfileBtn.style.display = 'inline-block';
+    saveProfileBtn.style.display = 'none';
+
+    showPopup("Profiili päivitetty!");
+  });
+
+  profileBtn.addEventListener('click', openProfileModal);
+
+  closeProfile.addEventListener('click', () => profileModal.classList.add('hidden'));
+  window.addEventListener('click', e => { if (e.target === profileModal) profileModal.classList.add('hidden'); });
 
 // ===== FILTER PANEL TOGGLE =====
 filterBtn.addEventListener('click', () => {
@@ -134,9 +277,25 @@ async function addMarkerWithImage(imageUrl) {
     return;
   }
 
+  const { data: meta } = await supabase
+  .from("users_meta")
+  .select("display_name")
+  .eq("id", user.id)
+  .single();
+
+  const creator_display_name = meta?.display_name || "Tuntematon";
+
   const { data, error } = await supabase
     .from('spots')
-    .insert([{ title, description: desc, image_url: imageUrl, tags, lat, lng, user_id: user.id }])
+    .insert([{
+      title,
+      description: desc,
+      image_url: imageUrl,
+      tags,
+      lat,
+      lng,
+      user_id: user.id,
+      creator_display_name }])
     .select();
 
   if (error) {
@@ -146,6 +305,10 @@ async function addMarkerWithImage(imageUrl) {
 
   const savedSpot = data[0];
 
+  const creatorHtml = savedSpot.creator_display_name 
+  ? `<br><small>By: "${savedSpot.creator_display_name}"</small>` 
+  : "";
+
   const marker = L.marker([lat, lng]).addTo(map);
   const tagsHtml = tags.length ? `<br><small>Tägit: ${tags.join(', ')}</small>` : '';
   const imageHtml = imageUrl ? `<br><img src="${imageUrl}" style="max-width:100%;" alt="Kuva spotista">` : '';
@@ -154,6 +317,7 @@ async function addMarkerWithImage(imageUrl) {
       <b>${title}</b><br>
       ${desc}${imageHtml}${tagsHtml}<br>
       <small>Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}</small><br>
+      ${creatorHtml}
       <button onclick="deleteMarker(${marker._leaflet_id}, ${savedSpot.id})">Poista</button>
     </div>
   `;
@@ -190,28 +354,40 @@ cancelSpot.addEventListener('click', () => {
 // ===== LOAD SPOTS FROM SUPABASE =====
 async function loadSpots() {
   try {
-    const { data, error } = await supabase
+    const { data: spots, error } = await supabase
       .from("spots")
-      .select("id, title, description, image_url, tags, lat, lng, user_id");
+      .select("id, title, description, image_url, tags, lat, lng, user_id, creator_display_name");
 
     if (error) {
       console.error("Error loading spots:", error.message);
       return;
     }
 
-    console.log("Loaded spots:", data);
+    console.log("Loaded spots:", spots);
 
-    data.forEach(spot => {
+    // Remove any existing markers from the map and reset the markers array
+    if (markers && markers.length) {
+      markers.forEach(m => {
+        try { if (m.marker && map.hasLayer(m.marker)) map.removeLayer(m.marker); }
+        catch (e) { /* ignore */ }
+      });
+    }
+    markers = [];
+
+    // Add each spot and create popup content (creatorHtml is computed per spot)
+    spots.forEach(spot => {
       const marker = L.marker([spot.lat, spot.lng]).addTo(map);
 
       const tagsHtml = spot.tags && spot.tags.length ? `<br><small>Tägit: ${spot.tags.join(", ")}</small>` : '';
       const imageHtml = spot.image_url ? `<br><img src="${spot.image_url}" style="max-width:150px; display:block; margin-top:5px;">` : '';
+      const creatorHtml = spot.creator_display_name ? `<br><small>Tekijä: "${spot.creator_display_name}"</small>` : '';
 
       const popupContent = `
         <div>
           <b>${spot.title}</b><br>
           ${spot.description || ""}${imageHtml}${tagsHtml}<br>
           <small>Lat: ${spot.lat.toFixed(5)}, Lng: ${spot.lng.toFixed(5)}</small>
+          ${creatorHtml}
         </div>
       `;
 
@@ -224,7 +400,8 @@ async function loadSpots() {
         tags: spot.tags || [],
         imageUrl: spot.image_url || null,
         id: spot.id,
-        user_id: spot.user_id
+        user_id: spot.user_id,
+        creator_display_name: spot.creator_display_name || null
       });
     });
 

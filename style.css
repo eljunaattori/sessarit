@@ -216,6 +216,7 @@ html, body {
     left: 0; top: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.5);
+    z-index: 3000;
   }
   
   /* Modal box */
@@ -226,6 +227,7 @@ html, body {
     width: 280px;
     text-align: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 3000;
   }
   
   /* Close button */
@@ -233,6 +235,7 @@ html, body {
     float: right;
     font-size: 22px;
     cursor: pointer;
+    z-index: 3000;
   }
   
   /* Open button */
@@ -270,12 +273,9 @@ html, body {
 }
 
 #authBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     padding: 10px 20px;
     background-color: #fff;
-    border: 2px solid #333;
+    border: 2px solid #000000;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -286,7 +286,7 @@ html, body {
     background-color: #f0f0f0;
 }
 
-#signInBtn {
+#authSubmitBtn {
     padding: 5px 10px;
     background-color: #fff;
     border: 2px solid #333;
@@ -296,29 +296,15 @@ html, body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-#signInBtn:hover {
-    background-color: #f0f0f0;
-}
-
-#signUpBtn {
-    padding: 5px 10px;
-    background-color: #fff;
-    border: 2px solid #333;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-#signUpBtn:hover {
+#authSubmitBtn:hover {
     background-color: #f0f0f0;
 }
 
 #signOutBtn {
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #fff;
-    border: 2px solid #333;
-    border-radius: 6px;
+    border: 2px solid #000000;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -385,5 +371,71 @@ html, body {
 }
 
 #locateBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#userEmail {
+    position: absolute;
+    top: 55px;
+    right: 60px;
+    font-size: 12px;
+    margin-left: auto;
+    color: #a1a1a1;
+}
+
+#userDisplayName {
+    position: absolute;
+    top: 70px;
+    right: 60px;
+    font-size: 12px;
+    margin-left: auto;
+    color: #a1a1a1;
+}
+
+#userProfilePic {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+}
+
+#editProfileBtn {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#editProfileBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#saveProfileBtn {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#saveProfileBtn:hover {
+    background-color: #f0f0f0;
+}
+
+#profileBtn {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+#profileBtn:hover {
     background-color: #f0f0f0;
 }
