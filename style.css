@@ -16,7 +16,7 @@ html, body {
 #title {
     position: relative;
     text-align: center;
-    font-size: clamp(1.5rem, 6vw, 3rem); /* min 1.5rem, preferred 6vw, max 3rem */
+    font-size: clamp(1rem, 6vw, 2rem); /* min 1.5rem, preferred 6vw, max 3rem */
     color: #fff;
     padding: 2vh 2vw;
     z-index: 1;
@@ -30,8 +30,8 @@ html, body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: clamp(150px, 40vw, 300px);  /* scales but stays within limits */
-    height: clamp(150px, 40vw, 300px);
+    width: clamp(50px, 40vw, 200px);  /* scales but stays within limits */
+    height: clamp(50px, 40vw, 200px);
     background-image: url('https://www.sdsskateboards.com/cdn/shop/products/dip-black_1024x1024.png?v=1676345769');
     background-size: cover;
     background-position: center;

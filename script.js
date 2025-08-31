@@ -111,17 +111,27 @@ authSubmitBtn.addEventListener('click', async () => {
 
   try {
     // Try to sign in first
-    let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    let { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
     if (!signInError) {
       showPopup("Kirjauduttu sisään!");
       authModal.classList.add('hidden');
-      updateAuthButton(); // Update auth button
-    } else if (signInError.message.includes("User not found")) {
-      // Email not registered → sign up
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+      updateAuthButton();
+      return;
+    }
+
+    // If sign in fails with "Invalid login credentials", try sign up
+    if (signInError.message.includes("Invalid login credentials")) {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password
+      });
+
       if (signUpError) {
-        showPopup("Rekisteröinti epäonnistui: " + signUpError.message);
+        showPopup("Kirjautuminen epäonnistui: " + signUpError.message);
       } else {
         showPopup("Tili luotu! Tarkista sähköpostisi vahvistaaksesi tilin.");
         authModal.classList.add('hidden');
@@ -129,11 +139,13 @@ authSubmitBtn.addEventListener('click', async () => {
     } else {
       showPopup("Kirjautuminen epäonnistui: " + signInError.message);
     }
+
   } catch (err) {
     console.error(err);
     showPopup("Tapahtui virhe: " + err.message);
   }
 });
+
 
 signOutBtn.addEventListener('click', async () => {
   await supabase.auth.signOut();
