@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <title>Vaihda salasana</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh;">
+
+  <div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); width: 300px;">
+    <h3>Vaihda salasana</h3>
+    <input type="password" id="newPassword" placeholder="Uusi salasana" style="width: 100%; margin-top: 10px; padding: 8px;">
+    <button id="updatePasswordBtn" style="margin-top: 15px; width: 100%;">Tallenna uusi salasana</button>
+    <p id="resetMessage" style="margin-top: 10px; font-size: 0.9em;"></p>
+  </div>
+
+  <script>
+    const supabase = supabase.createClient("https://gexjgrverbwkncorpici.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdleGpncnZlcmJ3a25jb3JwaWNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyNTEwMzcsImV4cCI6MjA3MTgyNzAzN30.kzvRZqX4ia1jcdePFfbUozQMywS5pZufX4pMv20GRow");
+
+    document.getElementById('updatePasswordBtn').addEventListener('click', async () => {
+      const newPassword = document.getElementById('newPassword').value.trim();
+      if (!newPassword) {
+        document.getElementById('resetMessage').textContent = "Anna uusi salasana.";
+        return;
+      }
+
+      const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+
+      if (error) {
+        document.getElementById('resetMessage').textContent = "Virhe: " + error.message;
+      } else {
+        document.getElementById('resetMessage').textContent = "Salasana vaihdettu! Voit nyt kirjautua sisään uudella salasanalla.";
+      }
+    });
+  </script>
+</body>
+</html>

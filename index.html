@@ -91,9 +91,15 @@
       <input type="password" id="password" placeholder="Password"><br><br>
 
       <button id="authSubmitBtn">Kirjaudu / Luo tili</button>
+      <div style="margin-top: 10px; text-align: center;">
+        <a href="#" id="forgotPasswordLink" style="font-size: 0.9em; color: blue; cursor: pointer;">
+          Unohditko salasanan?
+        </a>
+      </div>
       </div>
     </div>
 
+  <!-- ===== AUTH CONTAINER ===== -->
   <div id="authContainer" style="display: flex; gap: 10px; align-items: center; position: absolute; top: 10px; right: 10px; z-index: 1100;">
 
   <!-- Shown only when logged out -->
@@ -110,6 +116,16 @@
 
   <button id="profileBtn" style="display: none;">Profiili</button>
   <button id="signOutBtn" style="display: none;" onclick="signOut()">Kirjaudu ulos</button>
+</div>
+
+  <!-- Reset Password Modal -->
+<div id="resetModal" class="hidden">
+  <h3>Palauta salasana</h3>
+  <input type="email" id="resetEmail" placeholder="Sähköposti" style="align-self: center; width: 80%; margin-top: 10px; padding: 8px;">
+  <div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
+    <button id="resetCancelBtn">Peruuta</button>
+    <button id="resetSubmitBtn">Lähetä palautuslinkki</button>
+  </div>
 </div>
 
 <!-- Profile Modal -->

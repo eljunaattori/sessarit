@@ -213,6 +213,38 @@ signOutBtn.addEventListener('click', async () => {
   closeProfile.addEventListener('click', () => profileModal.classList.add('hidden'));
   window.addEventListener('click', e => { if (e.target === profileModal) profileModal.classList.add('hidden'); });
 
+// Forgot password link → open modal
+document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  document.getElementById('resetModal').classList.remove('hidden');
+});
+
+// Cancel button
+document.getElementById('resetCancelBtn').addEventListener('click', () => {
+  document.getElementById('resetModal').classList.add('hidden');
+});
+
+// Submit reset request
+document.getElementById('resetSubmitBtn').addEventListener('click', async () => {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email) {
+    showPopup("Anna sähköpostiosoite.");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + "/reset", 
+  });
+
+  if (error) {
+    showPopup("Salasanan palautus epäonnistui: " + error.message);
+  } else {
+    showPopup("Palautuslinkki lähetetty sähköpostiin!");
+    document.getElementById('resetModal').classList.add('hidden');
+  }
+});
+
+
 // ===== FILTER PANEL TOGGLE =====
 filterBtn.addEventListener('click', () => {
   filterPanel.style.display = filterPanel.style.display === 'flex' ? 'none' : 'flex';
